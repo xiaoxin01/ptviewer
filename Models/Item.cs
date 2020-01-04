@@ -7,8 +7,7 @@ namespace PtViewer.Models
     [BsonIgnoreExtraElements]
     public class Item
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("_id")]
         public string Id { get; set; }
 
         [BsonElement("title")]
