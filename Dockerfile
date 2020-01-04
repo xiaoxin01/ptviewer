@@ -1,14 +1,16 @@
-FROM microsoft/dotnet:3.1-aspnetcore-runtime AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM microsoft/dotnet:3.1-sdk AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+RUN curl -sL https://deb.nodesource.com/setup_10.x |  bash -
+RUN apt-get install -y nodejs
 WORKDIR /src
-COPY ["src/PtViewer/PtViewer.csproj", "src/PtViewer/"]
-RUN dotnet restore "src/PtViewer/PtViewer.csproj"
-COPY . .
-WORKDIR "/src/src/PtViewer"
+COPY ["src/ptviewer/PtViewer.csproj", "src/ptviewer/"]
+RUN dotnet restore "src/ptviewer/PtViewer.csproj"
+COPY ./src ./src
+WORKDIR "/src/src/ptviewer"
 RUN dotnet build "PtViewer.csproj" -c Release -o /app
 
 FROM build AS publish
