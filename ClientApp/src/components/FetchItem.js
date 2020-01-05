@@ -7,6 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
   root: {
@@ -19,6 +20,9 @@ const styles = theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing.unit * 2,
+  },
+  thunbnail: {
+    maxWidth: 75,
   },
 });
 
@@ -50,11 +54,14 @@ class FetchItem extends Component {
     this.populateWeatherData({ search: this.state.search, page: 1, source: event.target.value });
   }
 
-  static renderitemsTable(items) {
+  renderitemsTable(items) {
+    const { classes } = this.props;
+
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
           <tr>
+            <th>Img</th>
             <th>Title</th>
             <th>Score</th>
             <th>Size</th>
@@ -65,6 +72,23 @@ class FetchItem extends Component {
         <tbody>
           {items.map(item =>
             <tr key={item.id}>
+              <td><Tooltip placement="right-end"
+                PopperProps={{
+                  popperOptions: {
+                    modifiers: {
+                      arrow: {
+                        enabled: Boolean(this.state.arrowRef),
+                        element: this.state.arrowRef,
+                      },
+                    },
+                  },
+                }}
+                title={
+                  <React.Fragment>
+                    <img src={item.image}></img>
+                  </React.Fragment>
+                }
+              ><img src={item.image} className={classes.thunbnail}></img></Tooltip></td>
               <td><a href={`open?id=${item.id}`} target="_blank" rel="noopener noreferrer">{item.title}</a><br />{item.description.replace(item.title, "")}</td>
               <td><a href={item.movieUrl} target="_blank" rel="noopener noreferrer">{item.movieScore}</a></td>
               <td>{item.size}</td>
@@ -119,7 +143,7 @@ class FetchItem extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchItem.renderitemsTable(this.state.items);
+      : this.renderitemsTable(this.state.items);
 
     return (
       <div>

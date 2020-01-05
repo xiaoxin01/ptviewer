@@ -10,6 +10,9 @@ namespace PtViewer.Models
         [BsonElement("_id")]
         public string Id { get; set; }
 
+        [BsonElement("img_url")]
+        public string Image { get; set; }
+
         [BsonElement("title")]
         public string Title { get; set; }
 
