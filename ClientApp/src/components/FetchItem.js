@@ -24,6 +24,9 @@ const styles = theme => ({
   thunbnail: {
     maxWidth: 75,
   },
+  thunbnailLarge: {
+    width: 1018,
+  },
 });
 
 class FetchItem extends Component {
@@ -57,6 +60,12 @@ class FetchItem extends Component {
   renderitemsTable(items) {
     const { classes } = this.props;
     let [from, to] = [atob('aW1nLm0tdGVhbS5jYw=='), atob('dHBpbWcuY2NhY2hlLm9yZw==')]
+    let getImgSrc = (ori, from, to) => {
+      if (null === ori) {
+        return null
+      }
+      return ori.replace(from, to)
+    }
 
     return (
       <table className='table table-striped' aria-labelledby="tabelLabel">
@@ -86,10 +95,10 @@ class FetchItem extends Component {
                 }}
                 title={
                   <React.Fragment>
-                    <img src={item.image.replace(from, to)}></img>
+                    <img className={classes.thunbnailLarge} src={getImgSrc(item.image, from, to)}></img>
                   </React.Fragment>
                 }
-              ><img src={item.image.replace(from, to)} className={classes.thunbnail}></img></Tooltip></td>
+              ><img className={classes.thunbnail} src={getImgSrc(item.image, from, to)}></img></Tooltip></td>
               <td><a href={`open?id=${item.id}`} target="_blank" rel="noopener noreferrer">{item.title}</a><br />{item.description.replace(item.title, "")}</td>
               <td><a href={item.movieUrl} target="_blank" rel="noopener noreferrer">{item.movieScore}</a></td>
               <td>{item.size}</td>
