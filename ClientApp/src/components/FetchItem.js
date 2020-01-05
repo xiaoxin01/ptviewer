@@ -38,7 +38,7 @@ class FetchItem extends Component {
   }
 
   componentDidMount() {
-    this.populateWeatherData({});
+    this.populateWeatherData({ source: "mt_a" });
   }
 
   handleChange = (e) => {
@@ -167,7 +167,7 @@ class FetchItem extends Component {
 
   async populateWeatherData(filter) {
     var url = '/api/items';
-    var { page = 1, source = "", search = "" } = filter;
+    var { page = 1, source, search = "" } = filter;
     if (null != filter) {
       url = `${url}?${queryString.stringify(filter)}`;
     }
