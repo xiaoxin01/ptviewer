@@ -34,7 +34,7 @@ namespace PtViewer.Services
             }
 
             return
-            _Items.Find(filters).Skip(skip).Limit(pageSize).ToList();
+            _Items.Find(filters).SortByDescending(item => item.Created).Skip(skip).Limit(pageSize).ToList();
         }
 
         public Item GetById(string id) =>
