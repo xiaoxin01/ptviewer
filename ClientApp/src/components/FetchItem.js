@@ -25,7 +25,8 @@ const styles = theme => ({
     maxWidth: 75,
   },
   thunbnailLarge: {
-    width: 1018,
+    maxWidth: 1200,
+    maxHeight: 896,
   },
 });
 
