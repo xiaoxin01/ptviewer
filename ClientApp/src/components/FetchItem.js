@@ -83,21 +83,21 @@ class FetchItem extends Component {
           {items.map(item =>
             <tr key={item.id}>
               <td><Tooltip placement="right-end"
-                PopperProps={{
-                  popperOptions: {
-                    modifiers: {
-                      arrow: {
-                        enabled: Boolean(this.state.arrowRef),
-                        element: this.state.arrowRef,
-                      },
-                    },
-                  },
-                }}
                 title={
                   <React.Fragment>
                     <img className={classes.thunbnailLarge} src={getImgSrc(item.image, from, to)}></img>
                   </React.Fragment>
                 }
+                PopperProps={{
+                  popperOptions: {
+                    modifiers: {
+                      preventOverflow: {
+                        enabled: true,
+                        boundariesElement: 'viewport',
+                      },
+                    },
+                  },
+                }}
               ><img className={classes.thunbnail} src={getImgSrc(item.image, from, to)}></img></Tooltip></td>
               <td><a href={`open?id=${item.id}`} target="_blank" rel="noopener noreferrer">{item.title}</a><br />{item.description.replace(item.title, "")}</td>
               <td><a href={item.movieUrl} target="_blank" rel="noopener noreferrer">{item.movieScore}</a></td>
