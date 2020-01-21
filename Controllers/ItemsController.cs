@@ -20,12 +20,12 @@ namespace PtViewer.Controllers
         public ActionResult<List<Item>> Get([FromQuery]string search,
          [FromQuery]string source,
          [FromQuery]int page = 1) =>
-            _ItemService.Get(search, page, source);
+            _ItemService.GetItem(search, page, source);
 
         [HttpGet("{id:length(24)}", Name = "GetItem")]
         public ActionResult<Item> GetById(string id)
         {
-            var Item = _ItemService.GetById(id);
+            var Item = _ItemService.GetItemById(id);
 
             if (Item == null)
             {
@@ -35,42 +35,42 @@ namespace PtViewer.Controllers
             return Item;
         }
 
-        [HttpPost]
-        public ActionResult<Item> Create(Item Item)
-        {
-            _ItemService.Create(Item);
+        // [HttpPost]
+        // public ActionResult<Item> Create(Item Item)
+        // {
+        //     _ItemService.Create(Item);
 
-            return CreatedAtRoute("GetItem", new { id = Item.Id.ToString() }, Item);
-        }
+        //     return CreatedAtRoute("GetItem", new { id = Item.Id.ToString() }, Item);
+        // }
 
-        [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Item ItemIn)
-        {
-            var Item = _ItemService.GetById(id);
+        // [HttpPut("{id:length(24)}")]
+        // public IActionResult Update(string id, Item ItemIn)
+        // {
+        //     var Item = _ItemService.GetItemById(id);
 
-            if (Item == null)
-            {
-                return NotFound();
-            }
+        //     if (Item == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            _ItemService.Update(id, ItemIn);
+        //     _ItemService.Update(id, ItemIn);
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
 
-        [HttpDelete("{id:length(24)}")]
-        public IActionResult Delete(string id)
-        {
-            var Item = _ItemService.GetById(id);
+        // [HttpDelete("{id:length(24)}")]
+        // public IActionResult Delete(string id)
+        // {
+        //     var Item = _ItemService.GetItemById(id);
 
-            if (Item == null)
-            {
-                return NotFound();
-            }
+        //     if (Item == null)
+        //     {
+        //         return NotFound();
+        //     }
 
-            _ItemService.Remove(Item.Id);
+        //     _ItemService.Remove(Item.Id);
 
-            return NoContent();
-        }
+        //     return NoContent();
+        // }
     }
 }

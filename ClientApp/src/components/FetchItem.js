@@ -8,6 +8,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
 
 const styles = theme => ({
   root: {
@@ -35,18 +39,20 @@ class FetchItem extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { items: [], loading: true, search: "", page: 1 };
+    this.state = { items: [], hots: [], loading: true, search: "", page: 1 };
   }
 
   componentDidMount() {
     this.populateWeatherData({ source: "mt_a" });
+    this.getHotsData()
   }
 
-  handleChange = (e) => {
+  handleInput = (e) => {
+    this.setState({ search: e.target.value })
+  }
+  handlePress = (e) => {
     if (e.key === "Enter") {
       this.populateWeatherData({ search: e.target.value, source: this.state.source });
-    } else {
-      this.setState({ search: e.target.value })
     }
   }
 
@@ -56,6 +62,10 @@ class FetchItem extends Component {
 
   handleSourceChange = event => {
     this.populateWeatherData({ search: this.state.search, page: 1, source: event.target.value });
+  }
+
+  handleHotClick = event => {
+    this.populateWeatherData({ search: event.target.innerText });
   }
 
   renderitemsTable(items) {
@@ -124,6 +134,19 @@ class FetchItem extends Component {
     );
   }
 
+  renderHots(hots) {
+    return (
+      <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
+        <IconButton aria-label="delete" title="clear" onClick={this.handleHotClick}>
+          <ClearIcon />
+        </IconButton>
+        {hots.map(hot =>
+          <Button key={hot.id} title={hot.id} onClick={this.handleHotClick}>{hot.id}</Button>
+        )}
+      </ButtonGroup>
+    )
+  }
+
   renderSources(source) {
     const { classes } = this.props;
 
@@ -131,6 +154,7 @@ class FetchItem extends Component {
       <form autoComplete="off">
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="age-simple">Source</InputLabel>
+
           <Select
             value={source}
             onChange={this.handleSourceChange}
@@ -158,7 +182,8 @@ class FetchItem extends Component {
 
     return (
       <div>
-        <div><input type="text" onKeyPress={this.handleChange} /></div>
+        <div><input type="text" onInput={this.handleInput} onKeyPress={this.handlePress} value={this.state.search} /></div>
+        {this.renderHots(this.state.hots)}
         {this.renderSources(this.state.source)}
         {this.renderitemsPagination(this.state.page)}
         {contents}
@@ -176,6 +201,13 @@ class FetchItem extends Component {
     const response = await fetch(url);
     const data = await response.json();
     this.setState({ ...this.state, items: data, loading: false, page: page, source: source, search: search });
+  }
+
+  async getHotsData() {
+    var url = '/api/hots';
+    const response = await fetch(url);
+    const data = await response.json();
+    this.setState({ ...this.state, hots: data });
   }
 }
 

@@ -9,17 +9,19 @@ namespace PtViewer.Services
 {
     public class ItemService
     {
-        private readonly IMongoCollection<Item> _Items;
+        private readonly IMongoCollection<Item> _items;
+        private readonly IMongoCollection<Hot> _hots;
 
         public ItemService(IItemstoreDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            _Items = database.GetCollection<Item>(settings.ItemsCollectionName);
+            _items = database.GetCollection<Item>(settings.ItemsCollectionName);
+            _hots = database.GetCollection<Hot>(settings.HotsCollectionName);
         }
 
-        public List<Item> Get(string search, int page, string source)
+        public List<Item> GetItem(string search, int page, string source)
         {
             var pageSize = 100;
             var skip = (page - 1) * pageSize;
@@ -34,25 +36,39 @@ namespace PtViewer.Services
             }
 
             return
-            _Items.Find(filters).SortByDescending(item => item.Created).Skip(skip).Limit(pageSize).ToList();
+            _items.Find(filters).SortByDescending(item => item.Created).Skip(skip).Limit(pageSize).ToList();
         }
 
-        public Item GetById(string id) =>
-            _Items.Find<Item>(Item => Item.Id == id).FirstOrDefault();
-
-        public Item Create(Item Item)
+        public List<Hot> GetHot(string search, int page)
         {
-            _Items.InsertOne(Item);
-            return Item;
+            var pageSize = 10;
+            var skip = (page - 1) * pageSize;
+            Expression<Func<Hot, bool>> filters = Hot => true;
+            if (null != search)
+            {
+                filters = filters.And<Hot>(Hot => Hot.Id.Contains(search));
+            }
+
+            return
+            _hots.Find(filters).SortByDescending(item => item.CreatedUnix).Skip(skip).Limit(pageSize).ToList();
         }
 
-        public void Update(string id, Item ItemIn) =>
-            _Items.ReplaceOne(Item => Item.Id == id, ItemIn);
+        public Item GetItemById(string id) =>
+            _items.Find<Item>(Item => Item.Id == id).FirstOrDefault();
 
-        public void Remove(Item ItemIn) =>
-            _Items.DeleteOne(Item => Item.Id == ItemIn.Id);
+        // public Item Create(Item Item)
+        // {
+        //     _items.InsertOne(Item);
+        //     return Item;
+        // }
 
-        public void Remove(string id) =>
-            _Items.DeleteOne(Item => Item.Id == id);
+        // public void Update(string id, Item ItemIn) =>
+        //     _items.ReplaceOne(Item => Item.Id == id, ItemIn);
+
+        // public void Remove(Item ItemIn) =>
+        //     _items.DeleteOne(Item => Item.Id == ItemIn.Id);
+
+        // public void Remove(string id) =>
+        //     _items.DeleteOne(Item => Item.Id == id);
     }
 }

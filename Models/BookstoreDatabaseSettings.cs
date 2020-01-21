@@ -3,6 +3,7 @@ namespace PtViewer.Models
     public class ItemstoreDatabaseSettings : IItemstoreDatabaseSettings
     {
         public string ItemsCollectionName { get; set; }
+        public string HotsCollectionName { get; set; }
         public string ConnectionString { get; set; }
         public string DatabaseName { get; set; }
     }
@@ -10,6 +11,7 @@ namespace PtViewer.Models
     public interface IItemstoreDatabaseSettings
     {
         string ItemsCollectionName { get; set; }
+        string HotsCollectionName { get; set; }
         string ConnectionString { get; set; }
         string DatabaseName { get; set; }
     }

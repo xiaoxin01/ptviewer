@@ -23,7 +23,7 @@ namespace PtViewer.Controllers
             {
                 return NotFound();
             }
-            var item = _ItemService.GetById(id);
+            var item = _ItemService.GetItemById(id);
             if (null == item || !_urlMapping.ContainsKey(item.Source))
             {
                 return NotFound();
