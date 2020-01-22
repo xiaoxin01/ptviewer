@@ -8,20 +8,20 @@ namespace PtViewer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FaveratesController : ControllerBase
+    public class FavoritesController : ControllerBase
     {
         private readonly ItemService _itemService;
 
-        public FaveratesController(ItemService ItemService)
+        public FavoritesController(ItemService ItemService)
         {
             _itemService = ItemService;
         }
 
-        // [HttpGet]
-        // public ActionResult<List<Item>> Get([FromQuery]string search,
-        //  [FromQuery]string source,
-        //  [FromQuery]int page = 1) =>
-        //     _itemService.GetItem(search, page, source);
+        [HttpGet]
+        public ActionResult<List<Item>> Get([FromQuery]string search,
+         [FromQuery]string source,
+         [FromQuery]int page = 1) =>
+            _itemService.GetFavorateItem(search, page, source);
 
         [HttpPost("{id}")]
         public IActionResult Faverate(string id)

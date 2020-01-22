@@ -34,8 +34,8 @@ const styles = theme => ({
   },
 });
 
-class FetchItem extends Component {
-  static displayName = FetchItem.name;
+class FetchFavorite extends Component {
+  static displayName = FetchFavorite.name;
 
   constructor(props) {
     super(props);
@@ -43,7 +43,7 @@ class FetchItem extends Component {
   }
 
   componentDidMount() {
-    this.populateWeatherData({ source: "mt_a" });
+    this.getFavorites({ source: "mt_a" });
     this.getHotsData()
   }
 
@@ -52,20 +52,20 @@ class FetchItem extends Component {
   }
   handlePress = (e) => {
     if (e.key === "Enter") {
-      this.populateWeatherData({ search: e.target.value, source: this.state.source });
+      this.getFavorites({ search: e.target.value, source: this.state.source });
     }
   }
 
   handlePageChange = page => {
-    this.populateWeatherData({ search: this.state.search, page: page.selected + 1, source: this.state.source });
+    this.getFavorites({ search: this.state.search, page: page.selected + 1, source: this.state.source });
   }
 
   handleSourceChange = event => {
-    this.populateWeatherData({ search: this.state.search, page: 1, source: event.target.value });
+    this.getFavorites({ search: this.state.search, page: 1, source: event.target.value });
   }
 
   handleHotClick = event => {
-    this.populateWeatherData({ search: event.target.innerText });
+    this.getFavorites({ search: event.target.innerText });
   }
 
   handleFaverate = (item, index) => {
@@ -147,8 +147,8 @@ class FetchItem extends Component {
     );
   }
 
-  async populateWeatherData(filter) {
-    var url = '/api/items';
+  async getFavorites(filter) {
+    var url = '/api/favorites';
     var { page = 1, source, search = "" } = filter;
     if (null != filter) {
       url = `${url}?${queryString.stringify(filter)}`;
@@ -179,8 +179,8 @@ class FetchItem extends Component {
   }
 }
 
-FetchItem.propTypes = {
+FetchFavorite.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FetchItem);
+export default withStyles(styles)(FetchFavorite);

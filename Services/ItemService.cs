@@ -39,6 +39,24 @@ namespace PtViewer.Services
             _items.Find(filters).SortByDescending(item => item.Created).Skip(skip).Limit(pageSize).ToList();
         }
 
+        public List<Item> GetFavorateItem(string search, int page, string source)
+        {
+            var pageSize = 100;
+            var skip = (page - 1) * pageSize;
+            Expression<Func<Item, bool>> filters = Item => Item.Favorators != null;
+            if (null != source)
+            {
+                filters = filters.And<Item>(Item => Item.Source == source);
+            }
+            if (null != search)
+            {
+                filters = filters.And<Item>(Item => Item.Description.Contains(search));
+            }
+
+            return
+            _items.Find(filters).SortByDescending(item => item.Created).Skip(skip).Limit(pageSize).ToList();
+        }
+
         public List<Hot> GetHot(string search, int page)
         {
             var pageSize = 10;
