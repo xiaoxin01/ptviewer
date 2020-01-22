@@ -56,14 +56,14 @@ namespace PtViewer.Services
         public Item GetItemById(string id) =>
             _items.Find<Item>(Item => Item.Id == id).FirstOrDefault();
 
+        public void Update(string id, Item ItemIn) =>
+            _items.ReplaceOne(Item => Item.Id == id, ItemIn);
+
         // public Item Create(Item Item)
         // {
         //     _items.InsertOne(Item);
         //     return Item;
         // }
-
-        // public void Update(string id, Item ItemIn) =>
-        //     _items.ReplaceOne(Item => Item.Id == id, ItemIn);
 
         // public void Remove(Item ItemIn) =>
         //     _items.DeleteOne(Item => Item.Id == ItemIn.Id);

@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 const styles = theme => ({
   root: {
@@ -68,6 +70,10 @@ class FetchItem extends Component {
     this.populateWeatherData({ search: event.target.innerText });
   }
 
+  handleFaverate = (item, index) => {
+    this.addFaverate(item, index)
+  }
+
   renderitemsTable(items) {
     const { classes } = this.props;
     let [from, to] = [atob('aW1nLm0tdGVhbS5jYw=='), atob('dHBpbWcuY2NhY2hlLm9yZw==')]
@@ -82,6 +88,7 @@ class FetchItem extends Component {
       <table className='table table-striped' aria-labelledby="tabelLabel">
         <thead>
           <tr>
+            <th>Act</th>
             <th>Img</th>
             <th>Title</th>
             <th>Score</th>
@@ -91,8 +98,12 @@ class FetchItem extends Component {
           </tr>
         </thead>
         <tbody>
-          {items.map(item =>
+          {items.map((item, index) =>
             <tr key={item.id}>
+              <td>
+                {!item.favorated && <IconButton onClick={(event) => this.handleFaverate(item, index)}><FavoriteBorderIcon /></IconButton>}
+                {item.favorated && <IconButton onClick={(event) => this.handleFaverate(item, index)}><FavoriteIcon /></IconButton>}
+              </td>
               <td><Tooltip placement="right-end"
                 title={
                   <React.Fragment>
@@ -208,6 +219,25 @@ class FetchItem extends Component {
     const response = await fetch(url);
     const data = await response.json();
     this.setState({ ...this.state, hots: data });
+  }
+
+  async addFaverate(item, index) {
+    var url = `/api/faverates/${item.id}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      }//,
+      // body: JSON.stringify(item)
+    });
+    item.favorated = !item.favorated;
+    this.setState(state => {
+      let items = state.items;
+      items[index] = item
+
+      return { ...state, items: items }
+    });
+    //const data = await response.json();
   }
 }
 
