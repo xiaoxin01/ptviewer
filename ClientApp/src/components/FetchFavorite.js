@@ -39,12 +39,11 @@ class FetchFavorite extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { items: [], hots: [], loading: true, search: "", page: 1 };
+    this.state = { items: [], loading: true, search: "", page: 1 };
   }
 
   componentDidMount() {
     this.getFavorites({ source: "mt_a" });
-    this.getHotsData()
   }
 
   handleInput = (e) => {
@@ -62,10 +61,6 @@ class FetchFavorite extends Component {
 
   handleSourceChange = event => {
     this.getFavorites({ search: this.state.search, page: 1, source: event.target.value });
-  }
-
-  handleHotClick = event => {
-    this.getFavorites({ search: event.target.innerText });
   }
 
   handleFaverate = (item, index) => {
@@ -88,19 +83,6 @@ class FetchFavorite extends Component {
         forcePage={page - 1} pageCount={10} pageRangeDisplayed={2} marginPagesDisplayed={3}>
       </ReactPaginate>
     );
-  }
-
-  renderHots(hots) {
-    return (
-      <ButtonGroup variant="text" color="primary" aria-label="text primary button group">
-        <IconButton aria-label="delete" title="clear" onClick={this.handleHotClick}>
-          <ClearIcon />
-        </IconButton>
-        {hots.map(hot =>
-          <Button key={hot.id} title={hot.id} onClick={this.handleHotClick}>{hot.id}</Button>
-        )}
-      </ButtonGroup>
-    )
   }
 
   renderSources(source) {
@@ -139,7 +121,6 @@ class FetchFavorite extends Component {
     return (
       <div>
         <div><input type="text" onInput={this.handleInput} onKeyPress={this.handlePress} value={this.state.search} /></div>
-        {this.renderHots(this.state.hots)}
         {this.renderSources(this.state.source)}
         {this.renderitemsPagination(this.state.page)}
         {contents}
@@ -159,15 +140,8 @@ class FetchFavorite extends Component {
     this.setState({ ...this.state, items: data, loading: false, page: page, source: source, search: search });
   }
 
-  async getHotsData() {
-    var url = '/api/hots';
-    const response = await fetch(url);
-    const data = await response.json();
-    this.setState({ ...this.state, hots: data });
-  }
-
   async addFaverate(item, index) {
-    var url = `/api/faverates/${item.id}`;
+    var url = `/api/favorites/${item.id}`;
     item.favorated = !item.favorated;
     this.setState(state => {
       let items = state.items;

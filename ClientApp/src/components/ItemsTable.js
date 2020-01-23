@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import Favorite from './Favorite';
 
 const styles = theme => ({
     root: {
@@ -38,11 +36,6 @@ class ItemsTable extends Component {
         this.renderitemsTable(this.props.items);
     }
 
-
-    handleFaverate = (item, index) => {
-        this.addFaverate(item, index)
-    }
-
     renderitemsTable(items) {
         const { classes } = this.props;
         let [from, to] = [atob('aW1nLm0tdGVhbS5jYw=='), atob('dHBpbWcuY2NhY2hlLm9yZw==')]
@@ -67,11 +60,10 @@ class ItemsTable extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map((item, index) =>
+                    {items.map((item) =>
                         <tr key={item.id}>
                             <td>
-                                {!item.favorated && <IconButton onClick={() => this.handleFaverate(item, index)}><FavoriteBorderIcon /></IconButton>}
-                                {item.favorated && <IconButton onClick={() => this.handleFaverate(item, index)}><FavoriteIcon /></IconButton>}
+                                <Favorite item={item} />
                             </td>
                             <td><Tooltip placement="right-end"
                                 title={
@@ -112,18 +104,6 @@ class ItemsTable extends Component {
                 {contents}
             </div>
         );
-    }
-
-    async addFaverate(item, index) {
-        var url = `/api/faverates/${item.id}`;
-        item.favorated = !item.favorated;
-        this.setState(state => {
-            let items = state.items;
-            items[index] = item
-
-            return { ...state, items: items }
-        });
-        //const data = await response.json();
     }
 }
 

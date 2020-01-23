@@ -43,7 +43,7 @@ class FetchItem extends Component {
   }
 
   componentDidMount() {
-    this.populateWeatherData({ source: "mt_a" });
+    this.getItems({ source: "mt_a" });
     this.getHotsData()
   }
 
@@ -52,24 +52,20 @@ class FetchItem extends Component {
   }
   handlePress = (e) => {
     if (e.key === "Enter") {
-      this.populateWeatherData({ search: e.target.value, source: this.state.source });
+      this.getItems({ search: e.target.value, source: this.state.source });
     }
   }
 
   handlePageChange = page => {
-    this.populateWeatherData({ search: this.state.search, page: page.selected + 1, source: this.state.source });
+    this.getItems({ search: this.state.search, page: page.selected + 1, source: this.state.source });
   }
 
   handleSourceChange = event => {
-    this.populateWeatherData({ search: this.state.search, page: 1, source: event.target.value });
+    this.getItems({ search: this.state.search, page: 1, source: event.target.value });
   }
 
   handleHotClick = event => {
-    this.populateWeatherData({ search: event.target.innerText });
-  }
-
-  handleFaverate = (item, index) => {
-    this.addFaverate(item, index)
+    this.getItems({ search: event.target.innerText });
   }
 
   renderitemsTable(items) {
@@ -147,7 +143,7 @@ class FetchItem extends Component {
     );
   }
 
-  async populateWeatherData(filter) {
+  async getItems(filter) {
     var url = '/api/items';
     var { page = 1, source, search = "" } = filter;
     if (null != filter) {
@@ -164,18 +160,6 @@ class FetchItem extends Component {
     const response = await fetch(url);
     const data = await response.json();
     this.setState({ ...this.state, hots: data });
-  }
-
-  async addFaverate(item, index) {
-    var url = `/api/faverates/${item.id}`;
-    item.favorated = !item.favorated;
-    this.setState(state => {
-      let items = state.items;
-      items[index] = item
-
-      return { ...state, items: items }
-    });
-    //const data = await response.json();
   }
 }
 
