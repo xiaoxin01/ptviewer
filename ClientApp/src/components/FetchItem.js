@@ -12,6 +12,7 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import ItemsTable from './ItemsTable'
+import TurnedInNotIcon from '@material-ui/icons/TurnedInNot';
 
 const styles = theme => ({
   root: {
@@ -66,6 +67,10 @@ class FetchItem extends Component {
 
   handleHotClick = event => {
     this.getItems({ search: event.target.innerText });
+  }
+
+  handleSubscribeClick = event => {
+    this.subscribe(this.state.search)
   }
 
   renderitemsTable(items) {
@@ -134,7 +139,12 @@ class FetchItem extends Component {
 
     return (
       <div>
-        <div><input type="text" onInput={this.handleInput} onKeyPress={this.handlePress} value={this.state.search} /></div>
+        <div>
+          <input type="text" onInput={this.handleInput} onKeyPress={this.handlePress} value={this.state.search} />
+          <IconButton title="subscribe" onClick={this.handleSubscribeClick}>
+            <TurnedInNotIcon />
+          </IconButton>
+        </div>
         {this.renderHots(this.state.hots)}
         {this.renderSources(this.state.source)}
         {this.renderitemsPagination(this.state.page)}
@@ -160,6 +170,21 @@ class FetchItem extends Component {
     const response = await fetch(url);
     const data = await response.json();
     this.setState({ ...this.state, hots: data });
+  }
+
+  async subscribe(key) {
+    if (key == '') {
+      return
+    }
+    var url = `/api/subscribes/${key}`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      }//,
+      // body: JSON.stringify(item)
+    });
+    const data = await response.json();
   }
 }
 

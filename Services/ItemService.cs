@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PtViewer.Models;
 using Supperxin.Linq;
@@ -11,6 +12,7 @@ namespace PtViewer.Services
     {
         private readonly IMongoCollection<Item> _items;
         private readonly IMongoCollection<Hot> _hots;
+        private readonly IMongoCollection<User> _users;
 
         public ItemService(IItemstoreDatabaseSettings settings)
         {
@@ -19,6 +21,7 @@ namespace PtViewer.Services
 
             _items = database.GetCollection<Item>(settings.ItemsCollectionName);
             _hots = database.GetCollection<Hot>(settings.HotsCollectionName);
+            _users = database.GetCollection<User>("users");
         }
 
         public List<Item> GetItem(string search, int page, string source)
@@ -76,6 +79,35 @@ namespace PtViewer.Services
 
         public void Update(string id, Item ItemIn) =>
             _items.ReplaceOne(Item => Item.Id == id, ItemIn);
+
+
+        public User GetUserByUserName(string username) =>
+            _users.Find<User>(user => user.UserName == username).FirstOrDefault();
+
+        public User CreateUser(User user)
+        {
+            _users.InsertOne(user);
+            return user;
+        }
+
+        public string[] GetSubscribes()
+        {
+            var demoUser = _users.Find(u => true).FirstOrDefault();
+            if (null == demoUser)
+                return null;
+
+            return demoUser.Subscribes;
+        }
+
+        public string[] Subscribe(string sub)
+        {
+            var update = Builders<User>.Update.AddToSet("subscribes", sub);
+            var demoUser = _users.FindOneAndUpdate<User>(u => true, update);
+            if (null == demoUser)
+                return null;
+
+            return demoUser.Subscribes;
+        }
 
         // public Item Create(Item Item)
         // {

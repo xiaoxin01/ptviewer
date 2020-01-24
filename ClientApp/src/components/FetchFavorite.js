@@ -7,10 +7,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
-import ClearIcon from '@material-ui/icons/Clear';
 import ItemsTable from './ItemsTable'
 
 const styles = theme => ({
@@ -141,7 +137,6 @@ class FetchFavorite extends Component {
   }
 
   async addFaverate(item, index) {
-    var url = `/api/favorites/${item.id}`;
     item.favorated = !item.favorated;
     this.setState(state => {
       let items = state.items;
