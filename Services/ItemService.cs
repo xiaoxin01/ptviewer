@@ -10,18 +10,21 @@ namespace PtViewer.Services
 {
     public class ItemService
     {
+        private readonly IMongoDatabase _database;
         private readonly IMongoCollection<Item> _items;
         private readonly IMongoCollection<Hot> _hots;
         private readonly IMongoCollection<User> _users;
+        private readonly IMongoCollection<Subscribe> _subscribe;
 
         public ItemService(IItemstoreDatabaseSettings settings)
         {
             var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
+            _database = client.GetDatabase(settings.DatabaseName);
 
-            _items = database.GetCollection<Item>(settings.ItemsCollectionName);
-            _hots = database.GetCollection<Hot>(settings.HotsCollectionName);
-            _users = database.GetCollection<User>("users");
+            _items = _database.GetCollection<Item>(settings.ItemsCollectionName);
+            _hots = _database.GetCollection<Hot>(settings.HotsCollectionName);
+            _users = _database.GetCollection<User>("users");
+            _subscribe = _database.GetCollection<Subscribe>("subscribes");
         }
 
         public List<Item> GetItem(string search, int page, string source)
@@ -105,6 +108,10 @@ namespace PtViewer.Services
             var demoUser = _users.FindOneAndUpdate<User>(u => true, update);
             if (null == demoUser)
                 return null;
+
+            var subscribe = _subscribe.UpdateOne<Subscribe>(s => s.Tag == sub,
+                Builders<Subscribe>.Update.SetOnInsert("_id", sub).AddToSet("subscribers", demoUser.Id),
+                new UpdateOptions() { IsUpsert = true });
 
             return demoUser.Subscribes;
         }
