@@ -15,24 +15,6 @@ import ItemsTable from './ItemsTable'
 import TurnedInNotIcon from '@material-ui/icons/TurnedInNot';
 
 const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 120,
-  },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-  },
-  thunbnail: {
-    maxWidth: 75,
-  },
-  thunbnailLarge: {
-    maxWidth: 1200,
-    maxHeight: 896,
-  },
 });
 
 class FetchItem extends Component {

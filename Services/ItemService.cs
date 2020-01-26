@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -93,13 +94,16 @@ namespace PtViewer.Services
             return user;
         }
 
-        public string[] GetSubscribes()
+        public Subscribe[] GetSubscribes(int count)
         {
-            var demoUser = _users.Find(u => true).FirstOrDefault();
-            if (null == demoUser)
-                return null;
+            count = count > 100 ? 100 : count;
+            // var demoUser = _users.Find(u => true).FirstOrDefault();
+            // if (null == demoUser)
+            //     return null;
 
-            return demoUser.Subscribes;
+            // return demoUser.Subscribes.Take(count).ToArray();
+
+            return _subscribe.Find(s => true).SortByDescending(s => s.Created).Limit(count).ToList().ToArray();
         }
 
         public string[] Subscribe(string sub)
@@ -114,6 +118,16 @@ namespace PtViewer.Services
                 new UpdateOptions() { IsUpsert = true });
 
             return demoUser.Subscribes;
+        }
+
+        public void RemoveSubscribe(string id)
+        {
+            var update = Builders<User>.Update.Pull("subscribes", id);
+            var demoUser = _users.FindOneAndUpdate<User>(u => true, update);
+            if (null == demoUser)
+                return;
+
+            _subscribe.DeleteOne(item => item.Tag == id);
         }
 
         // public Item Create(Item Item)

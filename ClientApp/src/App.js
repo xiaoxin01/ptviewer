@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import FetchItem from './components/FetchItem'
 import FetchFavorite from './components/FetchFavorite'
+import FetchSubscribe from './components/FetchSubscribe'
 
 import './custom.css'
 
@@ -14,6 +15,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={FetchItem} />
         <Route exact path='/favorate' component={FetchFavorite} />
+        <Route exact path='/subscribe' component={FetchSubscribe} />
       </Layout>
     );
   }
