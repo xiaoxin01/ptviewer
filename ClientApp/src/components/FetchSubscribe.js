@@ -55,6 +55,13 @@ class FetchFetchSubscribe extends Component {
 
   async deleteItem(item) {
     let url = `/api/subscribes/${item.tag}`
+    await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      }//,
+      // body: JSON.stringify(item)
+    });
     let objs = this.state.objs;
     objs.splice(objs.indexOf(item), 1)
     this.setState({ ...this.state, objs: objs, loading: false });
