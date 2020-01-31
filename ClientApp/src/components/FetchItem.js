@@ -105,6 +105,7 @@ class FetchItem extends Component {
             <MenuItem value="">
               <em>None</em>
             </MenuItem>
+            <MenuItem value="ob">ob</MenuItem>
             <MenuItem value="hds">hds</MenuItem>
             <MenuItem value="mt_a">mt_a</MenuItem>
             <MenuItem value="mt_s">mt_s</MenuItem>
