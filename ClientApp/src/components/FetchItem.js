@@ -48,7 +48,7 @@ class FetchItem extends Component {
   }
 
   handleHotClick = event => {
-    this.getItems({ search: event.target.innerText });
+    this.getItems({ search: event.target.innerText, source: this.state.source });
   }
 
   handleSubscribeClick = event => {
